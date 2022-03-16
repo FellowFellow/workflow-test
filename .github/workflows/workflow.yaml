@@ -59,12 +59,15 @@ jobs:
       - name: check inputs
         id: check
         run: |
-          echo "::set-output name=branch::$GITHUB_REF_NAME"
+          if [ $GITHUB_REF_NAME == "dev" ]; then
+            echo "::set-output name=is_dev::true"
+          else
+            echo "::set-output name=is_dev::false"
           echo "::set-output name=version::$(cat version.txt)"
 
   version-actions:
     needs: pre-ci
-    if: ${{ needs.pre-ci.outputs.branch == 'dev' }} || ${{ github.event.inputs.hotfix == true }} || ${{ github.event.inputs.UpdateVersion == true }}
+    if: ${{ needs.pre-ci.outputs.is_dev == true }} || ${{ github.event.inputs.hotfix == true }} || ${{ github.event.inputs.UpdateVersion == true }}
     runs-on: ubuntu-latest
     name: version-update
     steps:
