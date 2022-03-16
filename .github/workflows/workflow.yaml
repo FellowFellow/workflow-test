@@ -1,0 +1,134 @@
+
+on:
+  workflow_dispatch:
+    inputs:
+      dryrun:
+        description: "dryrun?"
+        required: true
+        default: false
+        type: boolean
+      hotfix:
+        description: "hotfix?"
+        required: true
+        default: false
+        type: boolean
+      publish_hotfix:
+        description: "publish the hotfix as a release?"
+        required: true
+        default: false
+        type: boolean
+      run_tests:
+        description: "run all tests?"
+        required: true
+        default: true
+        type: boolean
+      db_upgrade:
+        description: "run db upgrade?"
+        required: true
+        default: true
+        type: boolean
+      send_mail:
+        description: "send error mail"
+        required: true
+        default: true
+        type: boolean
+      publish_release:
+        description: "publish the release?"
+        required: true
+        default: true
+        type: boolean
+      UpdateVersion:
+        description: "update the version number (auto triggers on dev branch)"
+        required: true
+        default: false
+        type: boolean
+
+
+
+name: trigger-workflow
+jobs:
+
+  pre-ci:
+    runs-on: ubuntu-latest
+    name: pre-ci
+    outputs:
+      branch: ${{ steps.check.outputs.branch }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+
+      - name: check inputs
+        id: check
+        run: |
+          echo "::set-output name=branch::$GITHUB_REF_NAME"
+          echo "::set-output name=version::$(cat version.txt)"
+
+  version-actions:
+    needs: pre-ci
+    if: ${{ needs.pre-ci.outputs.branch == dev }} || ${{ github.event.inputs.hotfix == true }} || ${{ github.event.inputs.UpdateVersion == true }}
+    runs-on: ubuntu-latest
+    name: version-update
+    steps:
+
+      - name: check condition
+        run: |
+          echo ${{ github.event.inputs.hotfix }}
+          echo - ${{ github.ref }} -
+          echo ${{ github.event.inputs.UpdateVersion }}
+
+      - name: set env if hotfix == true
+        if: ${{ github.event.inputs.hotfix == true }} 
+        run: |
+          echo "hotfix=True" >> $GITHUB_ENV
+          echo "is hotfix: ${{ github.event.inputs.hotfix }}"
+
+      - name: set env if UpdateVersion == true
+        if: ${{ github.event.inputs.UpdateVersion == true }} 
+        run: |
+          echo "UpdateVersion=True" >> $GITHUB_ENV
+          echo "is UpdateVersion: ${{ github.event.inputs.UpdateVersion }}"
+      
+      # get git code
+      - name: Check out source repository
+        id: checkoutsourcerepo
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GitPASSWORD }}
+          
+      # Generates the core version based on the core-version file
+      - name: Generate core-versions
+        id: generate_num
+        run: |
+          sudo apt install python3 >> /dev/null
+
+          echo "OldVersion=$(cat version.txt)" >> $GITHUB_ENV
+          python3 version.py
+
+          echo "CurrentVersion=$(cat version.txt)" >> $GITHUB_ENV
+
+      - name: push to git
+        if: $OldVersion != $CurrentVersion
+        run: |
+          echo $OldVersion
+          echo $CurrentVersion
+
+          git config --global user.email "benedikt.liebs@fellow-consulting.de"
+          git config --global user.name "FellowFellow"
+
+          git add version.txt
+          git tag $(cat version.txt) HEAD
+          git commit -m "version update"
+          git push
+          git push --tags
+
+
+  test-version:
+    needs: version-update
+    runs-on: ubuntu-latest
+    name: test-version
+    steps:
+      - name: check env
+        run: |
+          echo ${{ env.CurrentVersion }}
+          echo "---"
+          echo $CurrentVersion
+
