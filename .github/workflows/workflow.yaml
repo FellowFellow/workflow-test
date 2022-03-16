@@ -87,8 +87,8 @@ jobs:
       - name: push to git
         if: ${{ steps.generate_num.outputs.old_version != steps.generate_num.outputs.version }}
         run: |
-          echo $OldVersion
-          echo $CurrentVersion
+          echo ${{ steps.generate_num.outputs.old_version }}
+          echo ${{ steps.generate_num.outputs.version }}
 
           git config --global user.email "benedikt.liebs@fellow-consulting.de"
           git config --global user.name "FellowFellow"
