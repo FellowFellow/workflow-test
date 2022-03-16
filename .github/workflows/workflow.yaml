@@ -64,7 +64,7 @@ jobs:
 
   version-actions:
     needs: pre-ci
-    if: ${{ needs.pre-ci.outputs.branch == dev }} || ${{ github.event.inputs.hotfix == true }} || ${{ github.event.inputs.UpdateVersion == true }}
+    if: ${{ needs.pre-ci.outputs.branch == 'dev' }} || ${{ github.event.inputs.hotfix == true }} || ${{ github.event.inputs.UpdateVersion == true }}
     runs-on: ubuntu-latest
     name: version-update
     steps:
