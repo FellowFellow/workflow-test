@@ -83,6 +83,16 @@ jobs:
           python3 version.py
 
           echo "::set-output name=version::$(cat version.txt)"
+        
+      - name: check
+        run: |
+
+          echo ${{ steps.generate_num.outputs.old_version }} 
+          echo ${{ steps.generate_num.outputs.version }}
+
+          echo "-- inputs --"
+          echo ${{ github.event.inputs.hotfix }}
+          echo ${{ github.event.inputs.UpdateVersion }}
 
       - name: push to git
         if: ${{ steps.generate_num.outputs.old_version != steps.generate_num.outputs.version }}
