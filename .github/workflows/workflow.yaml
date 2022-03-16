@@ -109,7 +109,6 @@ jobs:
           echo "CurrentVersion=$(cat version.txt)" >> $GITHUB_ENV
 
       - name: push to git
-        if: $OldVersion != $CurrentVersion
         run: |
           echo $OldVersion
           echo $CurrentVersion
