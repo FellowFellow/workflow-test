@@ -100,14 +100,5 @@ jobs:
           git push --tags
 
 
-  test-version:
-    needs: version-update
-    runs-on: ubuntu-latest
-    name: test-version
-    steps:
-      - name: check env
-        run: |
-          echo ${{ env.CurrentVersion }}
-          echo "---"
-          echo $CurrentVersion
+
 
