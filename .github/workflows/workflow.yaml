@@ -56,12 +56,12 @@ jobs:
     steps:
 
       - name: set env if hotfix == true
-        if: ${{ github.event.inputs.hotfix == true }} 
+        if: ${{ github.event.inputs.hotfix == 'true' }} 
         run: |
           echo "hotfix=True" >> $GITHUB_ENV
 
       - name: set env if UpdateVersion == true
-        if: ${{ github.event.inputs.UpdateVersion == true }} 
+        if: ${{ github.event.inputs.UpdateVersion == 'true' }} 
         run: |
           echo "UpdateVersion=True" >> $GITHUB_ENV
       
