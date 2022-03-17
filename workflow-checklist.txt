@@ -1,0 +1,4 @@
+version update on dev branch or incrementVersion input
+hotfix -> add to version num and push to git -> update the version in all steps use step output!
+
+problem with version upadte is the tag -> the tag needs to be unique

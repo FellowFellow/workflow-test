@@ -1,0 +1,10 @@
+hotfix -> 4 - 5 Stunden
+Tf n8n -> 6 - 8 Stunden
+Changelog -> >1 Stunde
+Preprod -> 8 bis 10 Stunden (Benötige hier auch noch eine möglichkeit die server via github zu deployen)
+Sandbox -> ~4 Stunden (DB Import export muss noch geschrieben werden) + 1-2 Stunden für doc2app ui 
+Use Private Runner -> 4-8 Stunden. Hier kann ich den workflow viel schneller machen wahrscheinlich zwischen 40% oder 60% 
+Watchdog -> 1 Stunde (Email Import, Version Number)
+Watchdog export to infor / ln (ln export geht nicht mit meinen code. Benötige aber jemanden der mit die xml erklärt) -> Zeit ??
+Zabbix add new servers to ping -> >1 Stunde
+Linkerd -> ??

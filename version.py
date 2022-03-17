@@ -10,7 +10,7 @@ if os.getenv("UpdateVersion") in ["true", "True"]:
 branch = os.getenv("GITHUB_REF_NAME")
 version_file = os.getenv("CORE_VERSION_FILE")
 if version_file == None:
-    version_file = os.getenv("version_file")
+    version_file = os.getenv("VersionFile")
 if not version_file:
     version_file = False
 
